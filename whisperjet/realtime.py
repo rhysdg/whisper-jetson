@@ -21,8 +21,8 @@ import time
 import queue
 import threading
 import numpy as np
-import pyaudio
-import whisperjet
+# lazy: import pyaudio
+# lazy: import whisperjet
 from typing import Iterator, Optional, Callable, Union
 
 # Add whisper_trtllm to path for TensorRT-LLM backend
@@ -156,6 +156,7 @@ class RealtimeTranscriber:
     
     def _load_model(self):
         """Load Whisper model."""
+        import whisperjet
         if self._model is None:
             print(f"Loading model '{self.model_name}' using {self.backend} on {self.device}...")
             
@@ -190,6 +191,7 @@ class RealtimeTranscriber:
     
     def _audio_callback(self, in_data, frame_count, time_info, status):
         """PyAudio callback - runs in separate thread."""
+        import pyaudio
         self._audio_queue.put(in_data)
         return (None, pyaudio.paContinue)
     
@@ -199,6 +201,7 @@ class RealtimeTranscriber:
     
     def list_devices(self) -> list[dict]:
         """List available audio input devices."""
+        import pyaudio
         p = pyaudio.PyAudio()
         devices = []
         for i in range(p.get_device_count()):
@@ -243,6 +246,7 @@ class RealtimeTranscriber:
                 print(f"Found ReSpeaker at device {respeaker_idx}")
                 self.device_index = respeaker_idx
         
+        import pyaudio
         self._pyaudio = pyaudio.PyAudio()
         
         # Get device info

@@ -22,10 +22,10 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn.functional as F
-from datasets import load_dataset
+# from datasets import load_dataset
 from tokenizer import get_tokenizer
-from torch.utils.data import DataLoader
-from whisper.normalizers import EnglishTextNormalizer
+# lazy: from torch.utils.data import DataLoader
+# lazy: from whisper.normalizers import EnglishTextNormalizer
 from whisper_utils import (N_SAMPLES, log_mel_spectrogram, pad_or_trim,
                            store_transcripts, write_error_stats)
 
@@ -425,6 +425,8 @@ def decode_dataset(
     max_new_tokens=96,
     max_input_len=3000,
     padding_strategy='max'):
+    from datasets import load_dataset
+    from torch.utils.data import DataLoader
     librispeech_dummy = load_dataset(dataset, "clean", split="validation")
 
     data_loader = DataLoader(librispeech_dummy,
@@ -468,6 +470,7 @@ if __name__ == '__main__':
     args = parse_arguments()
     tensorrt_llm.logger.set_level(args.log_level)
     model = WhisperTRTLLM(args.engine_dir, args.debug, args.assets_dir)
+    from whisper.normalizers import EnglishTextNormalizer
     normalizer = EnglishTextNormalizer()
     if args.enable_warmup:
         results, total_duration = decode_dataset(

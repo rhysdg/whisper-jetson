@@ -20,9 +20,9 @@ from pathlib import Path
 from subprocess import CalledProcessError, run
 from typing import Dict, Iterable, List, Optional, TextIO, Tuple, Union
 
-import kaldialign
+# lazy: import kaldialign
 import numpy as np
-import soundfile
+# lazy: import soundfile
 import torch
 import torch.nn.functional as F
 
@@ -74,6 +74,7 @@ def load_audio_wav_format(wav_path):
     # make sure audio in .wav format
     assert wav_path.endswith(
         '.wav'), f"Only support .wav format, but got {wav_path}"
+    import soundfile
     waveform, sample_rate = soundfile.read(wav_path)
     assert sample_rate == 16000, f"Only support 16k sample rate, but got {sample_rate}"
     return waveform, sample_rate
@@ -264,6 +265,7 @@ def write_error_stats(
     words: Dict[str, List[int]] = defaultdict(lambda: [0, 0, 0, 0, 0])
     num_corr = 0
     ERR = "*"
+    import kaldialign
     for cut_id, ref, hyp in results:
         ali = kaldialign.align(ref, hyp, ERR)
         for ref_word, hyp_word in ali:

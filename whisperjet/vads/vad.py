@@ -1,7 +1,11 @@
 from typing import Optional
 
 import pandas as pd
-from pyannote.core import Annotation, Segment
+try:
+    from pyannote.core import Annotation, Segment
+except ImportError:
+    Annotation = None
+    Segment = None
 
 
 class Vad:
